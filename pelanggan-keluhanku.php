@@ -1,3 +1,29 @@
+<?php
+
+session_start();
+require 'functions.php';
+
+if ( !isset($_SESSION["login"]) ) {
+    header("Location:login.php");
+    exit;
+}
+
+if ( isset($_POST["detail-keluhan"])) {
+    $_SESSION["data_tiket_keluhan"] = $_POST["detail-keluhan"];
+    header("Location:pelanggan-detail-keluhan.php");
+    exit;
+}
+
+if ( isset($_POST["ulasan"])) {
+
+}
+
+$pelanggan_username = $_SESSION["login"];
+$pelanggan_ID = mysqli_query($conn, "SELECT ID FROM pelanggan WHERE username = '$pelanggan_username'");
+$result_proses = mysqli_query($conn, "SELECT * FROM tiketkeluhan WHERE status_ID != 5 AND pelanggan_ID = $pelanggan_ID ORDER BY tanggal_dibuat DESC");
+$result_selesai = mysqli_query($conn, "SELECT * FROM tiketkeluhan WHERE status_ID == 5 AND pelanggan_ID = $pelanggan_ID ORDER BY tanggal_dibuat DESC");
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,6 +85,46 @@
     <div class="container mb-3">
         <h2 style="color:#544021;">Dalam Proses</h2>
     </div>
+    
+    <form action="" method="post">
+        <?php
+            while($data = mysqli_fetch_assoc($result_proses)) {
+                $serangga_ID = $data['serangga_ID'];
+                $serangga = mysqli_query($conn, "SELECT nama FROM jenisserangga WHERE ID = '$serangga_ID'");
+                $tanggal_dibuat = $data['tanggal_dibuat'];
+                $status_ID = $data['status_ID'];
+                $status = mysqli_query($conn, "SELECT nama FROM statuspembasmian WHERE ID = '$status_ID'");
+                echo "  <div class=\"container mb-3\" style=\"background-color:#CDAC76; border-radius:20px;\">";
+                echo "      <div class=\"row gx-4\">";
+                echo "          <div class=\"col  d-flex align-items-center justify-content-center\">";
+                echo "              <img src=\"images/".$serangga.".png\" alt=\"\" height=\"140px\">";
+                echo "          </div>";
+                echo "          <div class=\"col d-flex align-items-center justify-content-center\">";
+                echo "              <p class=\"p-3\" style=\"font:500 28px Poppins, sans-serif;\">";
+                echo "                  Pembasmian Sarang".$serangga;
+                echo "              </p>";
+                echo "          </div>";
+                echo "          <div class=\"col  d-flex align-items-center justify-content-center\">";
+                echo "              <div class=\"col \">";
+                echo "                  <div class=\"row mt-5 p-2 d-flex justify-content-center\" style=\"font:500 16px Poppins, sans-serif; text-align: center;\">".$tanggal_dibuat."</div>";
+                echo "                  <div class=\"row m-4 p-2 d-flex justify-content-center\" style=\"font:500 18px Poppins, sans-serif; background-color:#E5CC47; color:white; ;border:3px solid white; border-radius: 30px;\">".$status."</div>";
+                echo "              </div>";
+                echo "          </div>";
+                echo "          <div class=\"col  d-flex align-items-center justify-content-center\">";
+                echo "              <button class=\"btn btn-light btn-lg\" type=\"submit\" name=\"detail-keluhan\" value=\"".$data."\">";
+                echo "                  Detail Keluhan";
+                echo "              </button>";
+                echo "          </div>";
+                echo "      </div>";
+                echo "  </div>";
+            }
+            
+        ?>
+
+    </form>
+    
+
+    <!--
     <div class="container mb-3" style="background-color:#CDAC76; border-radius:20px;">
         <div class="row gx-4">
             <div class="col  d-flex align-items-center justify-content-center">
@@ -82,12 +148,47 @@
             </div>
         </div>
     </div>
-    
+    -->
 
     <div class="container mt-4 mb-3">
         <h2 style="color:#544021;">Riwayat</h2>
     </div>
     
+    <?php
+        while($data = mysqli_fetch_assoc($result_selesai)) {
+            $serangga_ID = $data['serangga_ID'];
+            $serangga = mysqli_query($conn, "SELECT nama FROM jenisserangga WHERE ID = '$serangga_ID'");
+            $tanggal_dibuat = $data['tanggal_dibuat'];
+            $status_ID = $data['status_ID'];
+            $status = mysqli_query($conn, "SELECT nama FROM statuspembasmian WHERE ID = '$status_ID'");
+            echo "  <div class=\"container mb-3\" style=\"background-color:#CDAC76; border-radius:20px;\">";
+            echo "      <div class=\"row gx-4\">";
+            echo "          <div class=\"col  d-flex align-items-center justify-content-center\">";
+            echo "              <img src=\"images/".$serangga.".png\" alt=\"\" height=\"140px\">";
+            echo "          </div>";
+            echo "          <div class=\"col d-flex align-items-center justify-content-center\">";
+            echo "              <p class=\"p-3\" style=\"font:500 28px Poppins, sans-serif;\">";
+            echo "                  Pembasmian Sarang".$serangga;
+            echo "              </p>";
+            echo "          </div>";
+            echo "          <div class=\"col  d-flex align-items-center justify-content-center\">";
+            echo "              <div class=\"col \">";
+            echo "                  <div class=\"row mt-5 p-2 d-flex justify-content-center\" style=\"font:500 16px Poppins, sans-serif; text-align: center;\">".$tanggal_dibuat."</div>";
+            echo "                  <div class=\"row m-4 p-2 d-flex justify-content-center\" style=\"font:500 18px Poppins, sans-serif; background-color:#E5CC47; color:white; ;border:3px solid white; border-radius: 30px;\">".$status."</div>";
+            echo "              </div>";
+            echo "          </div>";
+            echo "          <div class=\"col  d-flex align-items-center justify-content-center\">";
+            echo "              <a class=\"btn btn-light btn-lg\" href=\"pelanggan-detail-keluhan.php\">";
+            echo "                  Detail Keluhan";
+            echo "              </a>";
+            echo "          </div>";
+            echo "      </div>";
+            echo "  </div>";
+        }
+        
+    ?>
+
+    <!--
     <div class="container mb-3" style="background-color:#CDAC76; border-radius:20px;">
         <div class="row gx-4">
             <div class="col  d-flex align-items-center justify-content-center">
@@ -114,7 +215,7 @@
             </div>
         </div>
     </div>
-
+    -->
 <!-- footer -->
     <div class="row text-white" style="background-color:#7E643A; padding:50px 150px; margin-top:5.5rem;">
         <div class="col">

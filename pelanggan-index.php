@@ -1,3 +1,16 @@
+<?php
+
+session_start();
+
+if( !isset($_SESSION["login"]) ){
+    header("Location:login.php");
+    exit;
+}
+
+require 'functions.php';
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-    <title>index</title>
+    <title>JAPERA - Solusi untuk Sarang Serangga</title>
     <style>
         *{
             /* border: 1px solid red; */
@@ -65,7 +78,7 @@
             <h1 style="font-size:48px; font-weight:bold; color:#544021;">Masalah Serangga</h1>
             <h1 style="font-size:48px; font-weight:bold; color:#544021;">Dengan Partner Terbaikmu</h1><br>
             
-            <a class="btn btn-lg" style="background-color:#CDAC76; font-weight: 600; color:white;" href="keluhan.php" >Buat Keluhan</a>
+            <a class="btn btn-lg" style="background-color:#CDAC76; font-weight: 600; color:white;" href="pelanggan-buat-keluhan.php" >Buat Keluhan</a>
             <!-- <button type="submit"><a href="update.php?id=<?//= $id ?>">myprofile</a></button> -->
         </div>
     </div>

@@ -1,3 +1,45 @@
+<?php
+
+session_start();
+require 'functions.php';
+
+if ( !isset($_SESSION["login"]) ) {
+    header("Location:login.php");
+    exit;
+}
+
+if( isset($_POST["kirim"]) ) {
+    $today_date = date("d/m/Y");
+    
+    $judul_pembasmian = "Pembasmian Sarang {$_POST["serangga"]}";
+    $foto_sarang = $_POST["gambar"];
+    $tanggal_dibuat = "TO_DATE('$today_date', 'DD/MM/YYYY')";
+    $tempat_ID = $_POST["tempat"];
+    $status_ID = 1;
+    $koordinator_ID = 0;
+    $serangga_ID = $_POST["serangga"];
+    $pelanggan_ID = $_SESSION["ID"];
+    $admin_ID = 0;
+
+    mysqli_query($conn, "INSERT INTO tiketkeluhan VALUES ('', '$judul_pembasmian', '$foto_sarang', '$tanggal_dibuat'
+    '$tempat_ID', '$status_ID', '$koordinator_ID', '$serangga_ID', '$pelanggan_ID', '$admin_ID')");
+    
+    echo "<script>alert('Keluhan berhasil dikirim, ditunggu ya🤗')</script>";
+        // echo `
+        //     <script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js">
+
+        //     // $(document).ready(function(){
+
+        //         swal("Good job!", "You clicked the button!", "success");
+
+        //     // });
+
+        //     </script>
+        //     `;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,7 +104,7 @@
     <div class="body"style="margin: 10rem;">
         <h1 class="d-flex justify-content-center" style="margin:180px 0 65px 0; color:#544021;">Buat Keluhan</h1>
 
-        <form action="pelanggan-keluhanku.php" method="post">
+        <form action="" method="post">
 
             <div class="mb-3 row d-flex justify-content-center">
 
@@ -70,7 +112,7 @@
                 <!-- <div class="form-check form-check-inline col-sm-5"> -->
                 <div class="col-sm-5">
                     <!-- <input name="jenis-serangga" type="text" class="form-control" id="jenis-serangga"> -->
-                    <select class="form-select" aria-label="Default select example">
+                    <select class="form-select" aria-label="Default select example" name="tempat">
                         <option selected>Pilih Jenis Tempat</option>
                         <option value="1">Rumah</option>
                         <option value="2">Kantor</option>
@@ -84,7 +126,7 @@
                 <label for="jenis-serangga" class="col-sm-2 col-form-label" style="color:#544021;">Jenis Serangga</label>
                 <div class="col-sm-5">
                     <!-- <input name="jenis-serangga" type="text" class="form-control" id="jenis-serangga"> -->
-                    <select class="form-select" aria-label="Default select example">
+                    <select class="form-select" aria-label="Default select example" name="serangga">
                     <option selected>Pilih Serangga</option>
                         <option value="1">Semut</option>
                         <option value="2">Rayap</option>
